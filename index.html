@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>👑Kailash Parshad👑</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Sai</title>
+
+    <link rel="icon" type="png|image" href="/assets/at0m_b0mb_logo.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+
+</head>
+
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+    <!-- Matrix -->
+    <script src="/js/matrix.js"></script>
+
+    <header class="header">
+        <a href="#" class="logo">{Portfolio} </a>
+
+        <nav class="navbar">
+            <a href="#home" style="--i:1;" class="active">Home</a>
+            <a href="#about" style="--i:2;">About</a>
+            <a href="#skill" style="--i:3;">Skills</a>
+            <a href="https://github.com/at0m-b0mb?tab=repositories" target="_blank" style="--i:4;">Projects</a>
+            <a href="#certificates" style="--i:5;">Certificates</a>
+            <a href="https://www.youtube.com/channel/UC2AMoUO4AwOk69rFFliDfKQ?sub_confirmation=1" target="_blank"
+                style="--i:6;">YouTube</a>
+            <a href="#contact" style="--i:7;">Contact</a>
+        </nav>
+    </header>
+
+    <section id="home" class="home">
+
+        <div class="home-content" data-scroll data-scroll-speed="-5">
+            <h3 class="mu">Hello, It's me</h3>
+            <h1>Kailash Parshad</h1>
+            <h3>And I'm a <span class="pro-text">
+                    <script>
+                        var typed = new Typed(".pro-text", {
+                            strings: [
+                                "Ethical Hacker",
+                                "Penetration Tester",
+                                "Cybersecurity Enthusiast",
+                                "YouTube Educator",
+                                "Bug Bounty Hunter"
+                            ],
+                            typeSpeed: 100,
+                            backSpeed: 100,
+                            backDelay: 1000,
+                            loop: true
+                        });
+                    </script>
+                </span></h3>
+
+            <p> &emsp; &emsp;A dedicated Ethical Hacker, Penetration Tester, and ardent Cybersecurity Enthusiast. My
+                passion for safeguarding digital landscapes and sharing knowledge has been the driving force behind my
+                journey.<br> <br>
+                &emsp; &emsp;I firmly believe that education is a birthright, and it should be accessible to all. With
+                this conviction, I launched my YouTube channel, HackProKP, where I'm committed to offering free
+                education in ethical hacking and cybersecurity. It's my way of contributing to a safer digital world and
+                ensuring that knowledge knows no boundaries.<br> <br>
+                &emsp; &emsp;With a solid foundation in Cybersecurity, Ethical Hacking, and Penetration Testing, I'm
+                continuously honing my skills to protect not only my school and college but also organizations and
+                individuals from cyber threats. My diverse certifications, including those from LinkedIn and Udemy,
+                attest to my commitment to staying at the forefront of the field.
+            </p>
+        </div>
+
+        <div class="home-img">
+
+            <div class="glowing-circle">
+                <span></span>
+                <span></span>
+                <div class="image">
+                    <img id="image" src="/assets/at0m_b0mb.png" alt="">
+                    <script>
+                        const imageFiles = ["at0m_b0mb.png", "at0m_b0mb1.png", "at0m_b0mb2.png", "at0m_b0mb3.png", "at0m_b0mb4.png", "at0m_b0mb5.png", "at0m_b0mb6.png"];
+
+                        let currentImageIndex = 0;
+                        const imageElement = document.getElementById('image');
+
+                        function changeImage() {
+                            imageElement.src = `/assets/${imageFiles[currentImageIndex]}`;
+                            currentImageIndex = (currentImageIndex + 1) % imageFiles.length;
+                        }
+
+                        setInterval(changeImage, 4000);
+                    </script>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section id="about" class="about">
+        <div class="about-content" data-scroll data-scroll-speed="-5">
+            <h3>👨‍💻About Me</h3>
+            <p>
+                Welcome to my digital space. I'm Kailash, a dedicated professional specializing in Cybersecurity,
+                Ethical Hacking, and Penetration Testing. With a strong foundation in Computer Science and a deep
+                passion for securing digital landscapes, I've embarked on a journey to fortify our ever-evolving cyber
+                world.
+            </p>
+            <p>
+                My academic journey started at Vellore Institute of Technology, where I pursued a Bachelor of Technology
+                in Computer Science with a specialization in Ethical Hacking and Penetration Testing. It's here that I
+                honed my technical skills, delving into areas like Cyber Defense, Software Development, and Leadership.
+            </p>
+            <p>
+                Through my various projects, I've actively contributed to enhancing cybersecurity, whether it's building
+                robust logging pipelines to monitor network traffic or leveraging the power of Sysmon, Elasticsearch,
+                Logstash, and Kibana for in-depth log analysis and security threat detection.
+            </p>
+            <p>
+                I'm not just a cybersecurity enthusiast but also a responsible global citizen. As a volunteer for the
+                Swachh Bharat Mission, I've taken steps towards creating a cleaner and more sustainable world. This
+                endeavor perfectly complements my passion for cybersecurity, as both revolve around protection and
+                well-being.
+            </p>
+            <p>
+                Despite the complex nature of my work, I am a firm believer in making knowledge accessible. That's why
+                I've worked on educational initiatives like the "H4ck3r's Pie Cyber Security and Hacking Device," making
+                cybersecurity education more affordable and approachable.
+            </p>
+            <p>
+                My dedication to creating a safer digital space is matched by my enthusiasm for volunteering, love for
+                animals, and commitment to environmental causes. I believe that, just as we secure our digital realm, we
+                must also protect our environment and uplift our communities.
+            </p>
+            <p>
+                Join me in my mission to strengthen cybersecurity and bring about positive social change. Let's create a
+                safer, cleaner, and more equitable world, one step at a time. Together, we can make a difference.
+            </p>
+        </div>
+    </section>
+
+    <section id="skill" class="skill">
+        <div class="skill-content" data-scroll data-scroll-speed="-5">
+            <h3>My Skills</h3>
+            <p>My professional journey has equipped me with a wide range of technical and soft skills that enable me to
+                excel in my field. Here are some of my key skills:</p>
+
+            <h3>&emsp;💻Technical Skills</h3>
+            <ul>
+                <li>&emsp;&emsp;Cybersecurity: Proficient in the principles and practices of cybersecurity, with a focus
+                    on ethical hacking and penetration testing.</li>
+                <li>&emsp;&emsp;Programming Languages: Skilled in Python and Java for developing solutions and
+                    automating tasks.</li>
+                <li>&emsp;&emsp;Network Security: Experienced in setting up secure networks and performing security
+                    audits.</li>
+                <li>&emsp;&emsp;Data Analysis: Proficient in using tools like Elasticsearch, Logstash, and Kibana for
+                    data analysis and visualization.</li>
+                <li>&emsp;&emsp;Machine Learning: Knowledge of machine learning concepts for threat detection and
+                    analysis.</li>
+                <li>&emsp;&emsp;Web Development: Familiar with HTML scripting for web applications.</li>
+                <li>&emsp;&emsp;Containerization: Experience with Docker for efficient deployment of security tools.
+                </li>
+                <li>&emsp;&emsp;Kubeflow: Proficient in using Kubeflow for machine learning pipelines.</li>
+            </ul>
+
+            <h3>&emsp;🙂Soft Skills</h3>
+            <ul>
+                <li>&emsp;&emsp;Team Leadership: Skilled in leading and collaborating with teams to achieve project
+                    goals.</li>
+                <li>&emsp;&emsp;Communication: Excellent communication skills for conveying complex technical concepts
+                    to diverse audiences.</li>
+                <li>&emsp;&emsp;Problem Solving: Strong problem-solving abilities to address cybersecurity challenges.
+                </li>
+                <li>&emsp;&emsp;Public Speaking: Effective public speaking and presentation skills for knowledge
+                    sharing.</li>
+                <li>&emsp;&emsp;Leadership: Demonstrated leadership in various projects, including cybersecurity and
+                    education initiatives.</li>
+                <li>&emsp;&emsp;Adaptability: Quick adaptability to new technologies and dynamic cybersecurity threats.
+                </li>
+            </ul>
+
+            <p>These skills form the foundation of my work, enabling me to make a significant impact in the fields of
+                cybersecurity, ethical hacking, and penetration testing.</p>
+        </div>
+    </section>
+    <section id="certificates" class="certificates">
+        <div class="certificate-list" data-scroll data-scroll-speed="-5">
+            <h3>📃My Certifications</h3>
+            <div id="certificate-list"></div>
+        </div>
+        <a href="https://www.linkedin.com/in/kailash-parshad/" class="btn-box" target="_blank">See More</a>
+    </section>
+    <script>
+        fetch('/assets/certificates.json')
+            .then(response => response.json())
+            .then(data => {
+                const certificateList = document.getElementById('certificate-list');
+
+                data.certificates.forEach(certificate => {
+                    const certificateDiv = document.createElement('div');
+                    certificateDiv.classList.add('certificate');
+
+                    const certificateTitle = document.createElement('h3');
+                    certificateTitle.textContent = certificate.title;
+
+                    const awardedBy = document.createElement('p');
+                    awardedBy.textContent = 'Awarded by: ' + certificate.awardedBy;
+
+                    const date = document.createElement('p');
+                    date.textContent = 'Date: ' + certificate.date;
+
+                    const showCredentialButton = document.createElement('button');
+                    showCredentialButton.textContent = 'Show Credential';
+                    showCredentialButton.addEventListener('click', () => {
+                        window.open(certificate.credentialURL, '_blank');
+                    });
+
+                    certificateDiv.appendChild(certificateTitle);
+                    certificateDiv.appendChild(awardedBy);
+                    certificateDiv.appendChild(date);
+                    certificateDiv.appendChild(showCredentialButton);
+
+                    certificateList.appendChild(certificateDiv);
+                });
+            });
+    </script>
+    <a href="https://www.linkedin.com/in/kailash-parshad/" class="btn-box" target="_blank">Download Resume</a>
+    <section id="contact" class="contact">
+        <div class="home-sci" data-scroll data-scroll-speed="-5">
+            <a href="https://github.com/at0m-b0mb" target="_blank"><i class='bx bxl-github'></i></a>
+            <a href="https://www.linkedin.com/in/kailash-parshad/" target="_blank"><i class='bx bxl-linkedin'></i></a>
+            <a href="https://wa.me/7042744745" target="_blank"><i class='bx bxl-whatsapp'></i></a>
+            <a href="https://www.instagram.com/_kailash_parshad_/" target="_blank"><i class='bx bxl-instagram'></i></a>
+        </div>
+    </section>
+</body>
+
+</html>

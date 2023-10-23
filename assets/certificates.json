@@ -1,0 +1,22 @@
+{
+    "certificates": [
+        {
+            "title": "Become an Ethical Hacker",
+            "awardedBy": "Linkedin",
+            "date": "Certificate Date: October 5, 2022",
+            "credentialURL": "https://www.linkedin.com/learning/certificates/0c8a5101fc269159604518cf387b37d7270dedda2f8cd981807f4b9c54feb108"
+        },
+        {
+            "title": "Practical Ethical Hacking - The Complete Course",
+            "awardedBy": "Udemy",
+            "date": "Certificate Date: February 2, 2022",
+            "credentialURL": "https://www.udemy.com/certificate/UC-a0bea95e-df35-4691-ad53-7409ee240c9b/"
+        },
+        {
+            "title": "Learn Ethical Hacking: Beginner to Advanced!",
+            "awardedBy": "Udemy",
+            "date": "Certificate Date: July 13,2021",
+            "credentialURL": "https://www.udemy.com/certificate/UC-02449fe8-8c9f-473e-94a3-4c3cdae513bf/"
+        }
+    ]
+}
