@@ -75,7 +75,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 @keyframes rotate-gradient{to{--angle:360deg}}
 
 /* ========== LOADING SCREEN ========== */
-.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:#0a0a0a;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .8s cubic-bezier(.77,0,.175,1);overflow:hidden}
+.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:#0a0a0a;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .8s cubic-bezier(.77,0,.175,1);overflow:hidden;touch-action:none}
 .loading-screen.done{transform:translateY(-100%)}
 .loading-hex-bg{position:absolute;top:0;left:0;width:100vw;height:300vh;font-family:var(--mono);font-size:10px;line-height:1.4;color:rgba(0,255,65,.06);overflow:hidden;word-break:break-all;pointer-events:none;z-index:0;padding:10px}
 .loading-hex-bg.active{animation:hex-scroll 30s linear infinite}
@@ -1582,6 +1582,10 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
         <span>kailashparshad7724@gmail.com</span>
       </a>
+      <a href="mailto:kparsha2@jh.edu" class="contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/><path d="M2 20l6-6M22 20l-6-6" stroke-width="1.5" opacity="0.5"/></svg>
+        <span>kparsha2@jh.edu</span>
+      </a>
       <a href="https://www.linkedin.com/in/kailash-parshad/" target="_blank" class="contact-item">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
         <span>LinkedIn</span>
@@ -1658,11 +1662,23 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 // LOADING SCREEN
 // ===============================
 (function(){
-  // Lock scroll while loading screen is visible
+  // Lock scroll on ALL devices (including iOS/Android touch scrolling)
+  document.documentElement.style.overflow='hidden';
+  document.documentElement.style.height='100%';
   document.body.style.overflow='hidden';
+  document.body.style.height='100%';
+  var preventTouch=function(e){if(e.cancelable)e.preventDefault();};
+  document.addEventListener('touchmove',preventTouch,{passive:false});
+  function unlockScroll(){
+    document.documentElement.style.overflow='';
+    document.documentElement.style.height='';
+    document.body.style.overflow='';
+    document.body.style.height='';
+    document.removeEventListener('touchmove',preventTouch);
+  }
   if(window.__siteLoaded){
     document.getElementById('loadingScreen').style.display='none';
-    document.body.style.overflow='';
+    unlockScroll();
     initSite();
     return;
   }
@@ -1718,7 +1734,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
           setTimeout(()=>{
             document.getElementById('loadingScreen').classList.add('done');
             window.__siteLoaded=true;
-            setTimeout(()=>{document.body.style.overflow='';initSite();},800);
+            setTimeout(()=>{unlockScroll();initSite();},800);
           },700);
         },800);
       },300);
@@ -2444,6 +2460,7 @@ const terminalData={
   ],
   contact:[
     '  📧 Email:    <span style="color:#00d4ff">kailashparshad7724@gmail.com</span>',
+    '  🎓 Edu:      <span style="color:#00d4ff">kparsha2@jh.edu</span>',
     '  🔗 LinkedIn: <a href="https://linkedin.com/in/kailash-parshad/" target="_blank" style="color:#00d4ff">linkedin.com/in/kailash-parshad/</a>',
     '  🐙 GitHub:   <a href="https://github.com/at0m-b0mb" target="_blank" style="color:#00d4ff">github.com/at0m-b0mb</a>',
     '  🎬 YouTube:  <a href="https://youtube.com/@HackProKP" target="_blank" style="color:#00d4ff">youtube.com/@HackProKP</a>'
@@ -2734,6 +2751,7 @@ function processCommand(cmd){
       addOutputLine('','output');
       addOutputLine('  <span style="color:#00d4ff">CONTACT</span>','output');
       addOutputLine('    📧 kailashparshad7724@gmail.com','output');
+      addOutputLine('    🎓 kparsha2@jh.edu','output');
       addOutputLine('    🔗 <a href="https://linkedin.com/in/kailash-parshad/" target="_blank" style="color:#00d4ff">linkedin.com/in/kailash-parshad</a>','output');
       addOutputLine('    🐙 <a href="https://github.com/at0m-b0mb" target="_blank" style="color:#00d4ff">github.com/at0m-b0mb</a>','output');
       addOutputLine('    🎦 <a href="https://youtube.com/@HackProKP" target="_blank" style="color:#00d4ff">youtube.com/@HackProKP</a>','output');
