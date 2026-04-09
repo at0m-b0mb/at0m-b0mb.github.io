@@ -12,7 +12,7 @@
 <style>
 /* ========== CSS RESET & BASE ========== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scrollbar-width:thin;scrollbar-color:#00ff41 #0a0a0a}
+html{scrollbar-width:thin;scrollbar-color:#00ff41 #0a0a0a;overflow-x:hidden}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#0a0a0a}
 ::-webkit-scrollbar-thumb{background:#00ff41;border-radius:3px}
@@ -167,8 +167,23 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .nav-link:hover::after{width:100%}
 .nav-admin{border:1px solid var(--green)!important;padding:6px 16px;border-radius:4px;color:var(--green)!important;font-family:var(--mono)!important;cursor:pointer;background:transparent;font-size:.85rem;font-weight:500;transition:all .3s!important}
 .nav-admin:hover{background:rgba(0,255,65,.1);box-shadow:var(--glow-green);text-shadow:0 0 8px var(--green)}
-.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:1001}
-.hamburger span{display:block;width:24px;height:2px;background:var(--green);transition:all .3s}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:1001;position:relative}
+.hamburger span{display:block;width:24px;height:2px;background:var(--green);transition:transform .35s cubic-bezier(.23,1,.32,1),opacity .25s,background .3s,box-shadow .3s}
+.hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg);box-shadow:0 0 8px var(--green)}
+.hamburger.active span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg);box-shadow:0 0 8px var(--green)}
+@keyframes hbg-glitch{
+  0%{clip-path:inset(0 0 100% 0)}
+  15%{clip-path:inset(0 0 0 0);transform:translate(-3px,0);filter:hue-rotate(90deg) brightness(2)}
+  30%{transform:translate(3px,0);filter:hue-rotate(-90deg)}
+  45%{transform:translate(-2px,0) skewX(5deg);filter:brightness(1.5)}
+  60%{transform:translate(2px,0) skewX(-3deg);filter:none}
+  75%{transform:translate(-1px,0)}
+  100%{transform:none;filter:none}
+}
+.hamburger.glitch span{animation:hbg-glitch .35s steps(1) forwards}
+.hamburger.glitch span:nth-child(2){animation-delay:.04s}
+.hamburger.glitch span:nth-child(3){animation-delay:.08s}
 
 /* ========== MOBILE MENU (Full screen overlay) ========== */
 .mobile-menu{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(10,10,10,.98);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:0;backdrop-filter:blur(20px)}
@@ -176,7 +191,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .mobile-menu a,.mobile-menu button{color:var(--text-primary);font-family:var(--display);font-size:clamp(1.5rem,5vw,2.5rem);font-weight:600;transition:all .4s;padding:12px 0;opacity:0;transform:translateY(20px);letter-spacing:-.02em}
 .mobile-menu.active a,.mobile-menu.active button{opacity:1;transform:translateY(0)}
 .mobile-menu a:hover,.mobile-menu button:hover{color:var(--green)}
-.mobile-close{position:absolute;top:20px;right:24px;background:none;border:none;color:var(--green);font-size:2rem;cursor:pointer;font-family:var(--mono)}
+.mobile-close{display:none}
 
 /* ========== HERO ========== */
 .hero{position:relative;height:100vh;height:100dvh;min-height:600px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
@@ -187,10 +202,11 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .hero-title.split-ready{visibility:visible}
 .hero-title .char{display:inline-block;opacity:0;transform:translateY(60px) rotateX(-90deg);transform-origin:bottom;background:linear-gradient(90deg,#462523,#cb9b51,#f6e27a,#f6f2c0,#f6e27a,#cb9b51,#462523,#cb9b51,#f6e27a,#f6f2c0,#f6e27a,#cb9b51,#462523);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:400% 100%;animation:gold-flow 6s linear infinite;filter:drop-shadow(0 0 3px rgba(246,226,122,.5)) drop-shadow(0 0 12px rgba(203,155,81,.2))}
 @keyframes gold-flow{0%{background-position:0% 50%}100%{background-position:400% 50%}}
-.hero-subtitle{font-family:var(--mono);font-size:clamp(.9rem,2vw,1.2rem);color:var(--green);min-height:2em;display:flex;align-items:center;justify-content:center;gap:0}
+.hero-subtitle{font-family:var(--mono);font-size:clamp(.9rem,2vw,1.2rem);color:var(--green);min-height:2em;display:flex;align-items:center;justify-content:center;gap:0;width:100%;max-width:100%;flex-wrap:wrap;text-align:center}
 .hero-subtitle .cursor{display:inline-block;width:10px;height:1.3em;background:var(--green);animation:blink 1s step-end infinite;margin-left:2px;vertical-align:middle}
+#typewriter{overflow-wrap:break-word;word-break:break-word}
 @keyframes blink{50%{opacity:0}}
-.hero-tagline{font-family:var(--mono);font-size:clamp(.75rem,1.2vw,.9rem);color:var(--text-muted);margin-top:16px;letter-spacing:1px}
+.hero-tagline{font-family:var(--mono);font-size:clamp(.75rem,1.2vw,.9rem);color:var(--text-muted);margin-top:16px;letter-spacing:1px;width:100%;max-width:100%;overflow-wrap:break-word;word-break:break-word;text-align:center}
 .scroll-explore{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:12px}
 .scroll-explore span{font-family:var(--mono);font-size:.7rem;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase}
 .scroll-line{width:1px;height:0;background:var(--green);animation:scroll-line-grow 2s ease-in-out infinite}
@@ -469,11 +485,14 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
   /* Hero section — allow title to wrap on narrow screens */
   .hero-title{white-space:normal;word-break:break-word}
   .hero{min-height:100dvh;min-height:-webkit-fill-available}
-  .hero-content{padding:0 16px}
-  .hero-tagline{padding:0 12px;font-size:clamp(.65rem,2.5vw,.8rem)}
+  .hero-content{padding:0 16px;width:100%;box-sizing:border-box}
+  .hero-tagline{padding:0 12px;font-size:clamp(.65rem,2.5vw,.8rem);letter-spacing:.5px}
 
-  /* MacBook — better mobile centering */
-  .mac-scene{margin:0 auto -60px;max-height:220px;transform:scale(0.42);pointer-events:none}
+  /* Subtitle — block flow so cursor sits right after typed text */
+  .hero-subtitle{display:block;text-align:center;overflow-wrap:break-word}
+
+  /* MacBook — width:100% lets justify-content:center properly center the 3D model */
+  .mac-scene{width:100%;max-height:220px;transform:scale(0.42);pointer-events:none;margin-bottom:-60px}
 
   /* Terminal — full screen mobile experience */
   .terminal-overlay{padding:0;align-items:stretch}
@@ -504,7 +523,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 
   /* Hero */
   .hero-title{font-size:clamp(1.4rem,8vw,2.5rem)}
-  .hero-subtitle{font-size:clamp(.75rem,3vw,1rem)}
+  .hero-subtitle{font-size:clamp(.75rem,3vw,1rem);display:block;text-align:center;overflow-wrap:break-word}
 
   /* MacBook — smaller scale for small phones */
   .mac-scene{transform:scale(0.32);max-height:180px;margin:0 auto -40px}
@@ -528,14 +547,16 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
   /* Resume monitor */
   .monitor-screen{max-height:350px;padding:12px;font-size:clamp(.65rem,2.5vw,.78rem)}
   .monitor-body{padding:6px}
-  .monitor-dl-area{position:relative;right:auto;bottom:auto;flex-direction:row;flex-wrap:wrap;justify-content:center;padding:12px}
+  .monitor-dl-area{position:relative;right:auto;bottom:auto;flex-direction:column;align-items:flex-end;padding:12px 16px}
   .monitor-dl-main{font-size:.7rem;padding:6px 12px}
+  .monitor-dl-hint{flex-basis:100%;text-align:right;margin-top:4px}
 }
 
 @media(max-width:375px){
   /* iPhone SE and other very small screens */
   .loading-ascii-art{font-size:.25rem;letter-spacing:-0.5px}
   .hero-title{font-size:clamp(1.2rem,7vw,2rem)}
+  .hero-tagline{letter-spacing:0;font-size:clamp(.58rem,3vw,.72rem);padding:0 8px}
   .mac-scene{transform:scale(0.28);max-height:160px;margin:0 auto -30px}
   .loading-title{letter-spacing:2px;font-size:.6rem}
   .loading-access{font-size:.85rem;letter-spacing:2px}
@@ -568,9 +589,9 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
   will-change:transform;
   transition:none;
 }
-@media(max-width:768px){.mac-scene{transform:scale(0.42);max-height:220px;margin-bottom:-60px}}
-@media(max-width:480px){.mac-scene{transform:scale(0.32);max-height:180px;margin-bottom:-40px}}
-@media(max-width:375px){.mac-scene{transform:scale(0.28);max-height:160px;margin-bottom:-30px}}
+@media(max-width:768px){.mac-scene{width:100%;transform:scale(0.42);max-height:220px;margin-bottom:-60px}}
+@media(max-width:480px){.mac-scene{width:100%;transform:scale(0.32);max-height:180px;margin-bottom:-40px}}
+@media(max-width:375px){.mac-scene{width:100%;transform:scale(0.28);max-height:160px;margin-bottom:-30px}}
 
 .scene{perspective:1800px;perspective-origin:50% 42%;position:relative;display:flex;justify-content:center;align-items:center}
 .mac{
@@ -1637,8 +1658,11 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 // LOADING SCREEN
 // ===============================
 (function(){
+  // Lock scroll while loading screen is visible
+  document.body.style.overflow='hidden';
   if(window.__siteLoaded){
     document.getElementById('loadingScreen').style.display='none';
+    document.body.style.overflow='';
     initSite();
     return;
   }
@@ -1694,7 +1718,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
           setTimeout(()=>{
             document.getElementById('loadingScreen').classList.add('done');
             window.__siteLoaded=true;
-            setTimeout(initSite,400);
+            setTimeout(()=>{document.body.style.overflow='';initSite();},800);
           },700);
         },800);
       },300);
@@ -1753,19 +1777,27 @@ function initSite(){
 (function(){
   const canvas=document.getElementById('matrixCanvas');
   const ctx=canvas.getContext('2d');
-  let w,h,columns,drops,fontSize;
+  let w,h,columns,drops,fontSize,prevW=0;
   const isMobile=window.matchMedia('(hover:none) and (pointer:coarse)').matches;
   const chars='アカサタナハマヤラワ0123456789ABCDEF@#$%^&*()_+-={}[]|:;<>?/~';
 
-  function init(){
-    w=canvas.width=window.innerWidth;
-    h=canvas.height=window.innerHeight;
+  function init(resetDrops){
+    /* Use actual CSS-rendered size so canvas always fills the visible area exactly */
+    w=canvas.width=canvas.offsetWidth||window.innerWidth;
+    h=canvas.height=canvas.offsetHeight||window.innerHeight;
     /* Larger font on mobile = fewer columns = less work */
     fontSize=isMobile?18:14;
-    columns=Math.floor(w/fontSize);
-    drops=Array(columns).fill(1);
+    const newColumns=Math.ceil(w/fontSize);
+    /* Only reset drop positions if column count actually changed or explicitly requested.
+       Height-only changes (mobile URL-bar show/hide) must NOT reset drops — that is
+       what caused the matrix to restart on every tap/scroll. */
+    if(resetDrops||newColumns!==columns){
+      columns=newColumns;
+      drops=Array(columns).fill(1);
+    }
+    prevW=w;
   }
-  init();
+  init(true);
 
   let lastFrame=0;
   const frameInterval=isMobile?45:0; /* ~22fps on mobile, uncapped on desktop */
@@ -1790,7 +1822,17 @@ function initSite(){
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
-  window.addEventListener('resize',init);
+
+  /* Debounced resize — only reset drops when WIDTH changes (column count changes).
+     Height-only changes from the mobile URL-bar must be silently absorbed. */
+  let resizeTimer;
+  window.addEventListener('resize',function(){
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(function(){
+      const widthChanged=Math.abs(window.innerWidth-prevW)>2;
+      init(widthChanged);
+    },150);
+  });
 })();
 
 // ===============================
@@ -2194,10 +2236,16 @@ function initNavScroll(){
 // ===============================
 function toggleMobile(){
   const menu=document.getElementById('mobileMenu');
+  const btn=document.getElementById('hamburger');
   menu.classList.toggle('active');
+  btn.classList.toggle('active');
+  // Glitch effect on toggle
+  btn.classList.remove('glitch');
+  void btn.offsetWidth; // force reflow to restart animation
+  btn.classList.add('glitch');
+  setTimeout(()=>btn.classList.remove('glitch'),400);
   if(menu.classList.contains('active')){
     document.body.style.overflow='hidden';
-    // Stagger animate links
     const links=menu.querySelectorAll('a,button');
     links.forEach((l,i)=>{
       l.style.transitionDelay=(i*0.08)+'s';
