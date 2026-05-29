@@ -333,13 +333,29 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .featured-scroll-hint{text-align:center;margin-top:16px;font-family:var(--mono);font-size:.75rem;color:var(--text-muted);letter-spacing:1px}
 .featured-scroll-hint svg{display:inline-block;vertical-align:middle;width:16px;height:16px;stroke:var(--text-muted);fill:none;margin-right:6px;animation:sway 2s ease-in-out infinite}
 @keyframes sway{0%,100%{transform:translateX(0)}50%{transform:translateX(8px)}}
-.featured-card{flex-shrink:0;width:min(80vw,900px);background:var(--glass-bg);backdrop-filter:var(--glass-blur);border:var(--glass-border);border-radius:16px;padding:clamp(24px,4vw,48px);position:relative;overflow:hidden}
-.featured-card::before{content:'';position:absolute;inset:-2px;border-radius:18px;padding:2px;background:conic-gradient(from var(--angle,0deg),transparent 30%,var(--green),var(--cyan),transparent 70%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rotate-gradient 4s linear infinite;opacity:.5}
-.featured-card .card-icon{font-size:clamp(2rem,4vw,3rem);margin-bottom:16px}
-.featured-card h3{font-family:var(--display);font-size:clamp(1.1rem,2vw,1.5rem);margin-bottom:12px;color:var(--green)}
-.featured-card p{font-size:clamp(.85rem,1.2vw,1rem);color:var(--text-secondary);line-height:1.7;max-width:600px}
-.featured-card .tech-stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.featured-card .tech-stack span{font-family:var(--mono);font-size:.75rem;padding:4px 10px;background:rgba(0,255,65,.08);border:1px solid rgba(0,255,65,.2);border-radius:3px;color:var(--green)}
+.featured-card{flex-shrink:0;width:clamp(280px,34vw,390px);height:clamp(360px,50vh,500px);position:relative;overflow:hidden;border-radius:20px;background:rgba(4,8,4,.96);border:1px solid rgba(0,255,65,.1);transition:border-color .4s,transform .45s cubic-bezier(.16,1,.3,1);cursor:pointer}
+.featured-card:hover{border-color:rgba(0,255,65,.45);transform:translateY(-8px) scale(1.012)}
+.featured-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,65,.7),transparent);opacity:0;transition:opacity .4s;z-index:5;pointer-events:none}
+.featured-card:hover::after{opacity:1}
+.fp-num{position:absolute;bottom:-.08em;right:-.02em;font-family:var(--display);font-size:clamp(130px,17vw,200px);color:rgba(203,155,81,.08);-webkit-text-stroke:1px rgba(203,155,81,.12);line-height:1;pointer-events:none;user-select:none;letter-spacing:-.05em;transition:transform .55s cubic-bezier(.16,1,.3,1),-webkit-text-stroke-color .4s,color .4s}
+.featured-card:hover .fp-num{transform:scale(1.06) translate(-3%,-2%);-webkit-text-stroke-color:rgba(203,155,81,.22);color:rgba(203,155,81,.14)}
+.fp-cat{position:absolute;top:22px;left:22px;font-family:var(--mono);font-size:.58rem;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;background:rgba(0,220,255,.07);border:1px solid rgba(0,220,255,.18);border-radius:20px;padding:4px 12px;z-index:2;white-space:nowrap}
+.fp-icon{position:absolute;top:16px;right:20px;font-size:3.2rem;line-height:1;opacity:.7;transition:opacity .35s,transform .45s cubic-bezier(.16,1,.3,1);z-index:2;pointer-events:none}
+.featured-card:hover .fp-icon{opacity:.28;transform:scale(.80) rotate(6deg)}
+.featured-card{cursor:pointer}
+.fp-bottom{position:absolute;bottom:0;left:0;right:0;padding:clamp(20px,4vw,32px) 22px clamp(20px,3vw,28px);background:linear-gradient(0deg,rgba(4,8,4,1) 65%,transparent);z-index:3}
+.fp-title{font-family:var(--display);font-size:clamp(1rem,1.7vw,1.3rem);color:var(--text-primary);line-height:1.22;margin:0;transition:color .3s,transform .45s cubic-bezier(.16,1,.3,1)}
+.featured-card:hover .fp-title{color:var(--green);transform:translateY(-6px)}
+.fp-reveal{display:grid;grid-template-rows:0fr;transition:grid-template-rows .48s cubic-bezier(.16,1,.3,1)}
+.featured-card:hover .fp-reveal{grid-template-rows:1fr}
+.fp-reveal-inner{overflow:hidden;min-height:0}
+.fp-desc{font-size:.8rem;color:var(--text-secondary);line-height:1.7;margin:10px 0 10px;opacity:0;transform:translateY(6px);transition:opacity .35s .12s,transform .35s .12s}
+.featured-card:hover .fp-desc{opacity:1;transform:none}
+.fp-tags{display:flex;flex-wrap:wrap;gap:5px;opacity:0;transform:translateY(4px);transition:opacity .3s .22s,transform .3s .22s}
+.featured-card:hover .fp-tags{opacity:1;transform:none}
+.fp-tags span{font-family:var(--mono);font-size:.63rem;padding:3px 8px;background:rgba(0,255,65,.06);border:1px solid rgba(0,255,65,.18);border-radius:3px;color:var(--green)}
+.fp-line{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan),transparent 80%);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1);z-index:4}
+.featured-card:hover .fp-line{transform:scaleX(1)}
 
 /* ========== YOUTUBE ========== */
 .youtube{padding:var(--section-padding);position:relative;z-index:1}
@@ -614,6 +630,52 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 @media(max-width:768px){.mac-scene{width:100%;transform:scale(0.42);max-height:220px;margin-bottom:-60px}}
 @media(max-width:480px){.mac-scene{width:100%;transform:scale(0.32);max-height:180px;margin-bottom:-40px}}
 @media(max-width:375px){.mac-scene{width:100%;transform:scale(0.28);max-height:160px;margin-bottom:-30px}}
+
+/* ===== LAPTOP EDGE GLOW =====
+   Sized to the LID only (520×340px = --mac-w × --mac-lid-h).
+   Centered at the lid's position in the scene:
+     scene center = mac_height/2 ≈ 338px
+     lid   center = lid_height/2  = 170px
+     offset = 338−170 = 168px up  → calc(-50% − 168px)
+   Replicates mac spin PLUS lid's own rotateX(−4deg) so it
+   tracks the screen face exactly at every rotation angle.
+   filter:drop-shadow traces the silhouette edge-precisely.
+   z-index:0 + before .mac in DOM = always behind. */
+.mac-glow-aura{
+  position:absolute;
+  width:860px;
+  height:660px;
+  top:50%; left:50%;
+  border-radius:44% 44% 52% 52% / 36% 36% 56% 56%;
+  border:none;
+  /* 5-layer gradient: screen core → halo → ambient fill → keyboard warmth → chromatic fringe */
+  background:
+    radial-gradient(ellipse 34% 24% at 50% 30%, rgba(255,248,210,.28) 0%, rgba(246,220,110,.14) 42%, transparent 80%),
+    radial-gradient(ellipse 60% 44% at 50% 36%, rgba(203,155,81,.22) 0%, rgba(180,118,36,.10) 55%, transparent 86%),
+    radial-gradient(ellipse 90% 74% at 50% 52%, rgba(155,95,22,.15) 0%, rgba(110,65,12,.05) 66%, transparent 90%),
+    radial-gradient(ellipse 46% 28% at 50% 81%, rgba(203,155,81,.09) 0%, rgba(150,90,18,.03) 64%, transparent 88%),
+    radial-gradient(ellipse 96% 86% at 50% 50%, rgba(80,160,255,.025) 58%, transparent 84%);
+  pointer-events:none;
+  z-index:0;
+  filter:blur(28px);
+  animation:
+    glow-full-spin  14s ease-in-out infinite,
+    edge-breathe    4.5s ease-in-out infinite;
+}
+.mac-glow-aura::before,.mac-glow-aura::after{content:none;display:none;}
+
+/* Track the full laptop (lid + hinge + base), matching .mac spin animation exactly */
+@keyframes glow-full-spin{
+  0%  {transform:translate(-50%,calc(-50% - 148px)) rotateX(-6deg)  rotateY(-28deg) translateY(0px);}
+  25% {transform:translate(-50%,calc(-50% - 148px)) rotateX(-10deg) rotateY(0deg)   translateY(-6px);}
+  50% {transform:translate(-50%,calc(-50% - 148px)) rotateX(-6deg)  rotateY(28deg)  translateY(0px);}
+  75% {transform:translate(-50%,calc(-50% - 148px)) rotateX(-10deg) rotateY(0deg)   translateY(-6px);}
+  100%{transform:translate(-50%,calc(-50% - 148px)) rotateX(-6deg)  rotateY(-28deg) translateY(0px);}
+}
+@keyframes edge-breathe{
+  0%,100%{opacity:.55;filter:blur(28px);}
+  50%    {opacity:.82;filter:blur(22px);}
+}
 
 .scene{perspective:1800px;perspective-origin:50% 42%;position:relative;display:flex;justify-content:center;align-items:center}
 .mac{
@@ -1087,6 +1149,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
     <!-- MacBook 3D Laptop -->
     <div class="mac-scene" id="laptopScene">
       <div class="scene">
+        <div class="mac-glow-aura"></div>
         <div class="mac" id="mac">
 
           <!-- LID -->
@@ -1280,6 +1343,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
       <button class="filter-btn" data-filter="Shell">Shell</button>
       <button class="filter-btn" data-filter="PowerShell">PowerShell</button>
       <button class="filter-btn" data-filter="Other">Other</button>
+      <button class="filter-btn" data-filter="recent">⏱ Recent</button>
     </div>
     <div class="projects-grid" id="projectsGrid">
       <div class="skeleton"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
@@ -1311,86 +1375,147 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
   </div>
   <div class="featured-scroll-wrap" id="featuredWrap">
     <div class="featured-track" id="featuredTrack">
-      <div class="featured-card">
-        <div class="card-icon">🎰</div>
-        <h3>Slot Machine Vulnerability Analysis</h3>
-        <p>JHU Security & Privacy course project — discovered 5 critical vulnerabilities with OWASP/CWE classification. Built an automated exploitation suite covering SQL injection, credential cracking, MD5 hash cracking, and CVE scanning.</p>
-        <div class="tech-stack">
-          <span>Go</span><span>Python</span><span>Shell</span><span>OWASP</span><span>CVE</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb">
+        <div class="fp-num">01</div>
+        <div class="fp-cat">Vulnerability Research</div>
+        <div class="fp-icon">🎰</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">Slot Machine Vulnerability Analysis</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">JHU Security & Privacy project — discovered 5 critical vulnerabilities with OWASP/CWE classification. Built an automated exploitation suite covering SQL injection, credential cracking, MD5 hash cracking, and CVE scanning.</p>
+            <div class="fp-tags"><span>Go</span><span>Python</span><span>Shell</span><span>OWASP</span><span>CVE</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">🌡️</div>
-        <h3>Smart Thermostat Security</h3>
-        <p>Secure-by-design IoT system with role-based access control (3 user roles), OWASP Top 10 mitigations, comprehensive audit logging, and defense-in-depth architecture. JHU Security course project.</p>
-        <div class="tech-stack">
-          <span>Go</span><span>SQLite</span><span>RBAC</span><span>IoT Security</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb">
+        <div class="fp-num">02</div>
+        <div class="fp-cat">IoT Security</div>
+        <div class="fp-icon">🌡️</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">Smart Thermostat Security</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">Secure-by-design IoT system with role-based access control (3 user roles), OWASP Top 10 mitigations, comprehensive audit logging, and defense-in-depth architecture. JHU Security course project.</p>
+            <div class="fp-tags"><span>Go</span><span>SQLite</span><span>RBAC</span><span>IoT Security</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">🛡️</div>
-        <h3>HackPiDefender</h3>
-        <p>Award-winning cybersecurity education tool powered by Raspberry Pi 5 — a portable, affordable alternative to Flipper Zero. Won two awards for impact and innovation. Features WiFi hacking, RFID scanning, and universal remote.</p>
-        <div class="tech-stack">
-          <span>Raspberry Pi 5</span><span>Kali Linux</span><span>Python</span><span>Bash</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb">
+        <div class="fp-num">03</div>
+        <div class="fp-cat">Hardware Security</div>
+        <div class="fp-icon">🛡️</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">HackPiDefender</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">Award-winning cybersecurity education tool powered by Raspberry Pi 5 — a portable alternative to Flipper Zero. Won two awards for impact and innovation. WiFi hacking, RFID scanning, and universal remote.</p>
+            <div class="fp-tags"><span>Raspberry Pi 5</span><span>Kali Linux</span><span>Python</span><span>Bash</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">🔍</div>
-        <h3>NmapAutomator</h3>
-        <p>Menu-driven Nmap automation tool with 11 specialized scan profiles designed for OSCP/HTB-style penetration testing workflows. Zero external dependencies — just Python 3 and Nmap. Built for speed and efficiency.</p>
-        <div class="tech-stack">
-          <span>Python</span><span>Nmap</span><span>OSCP</span><span>Automation</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb/NmapAutomator">
+        <div class="fp-num">04</div>
+        <div class="fp-cat">Penetration Testing</div>
+        <div class="fp-icon">🔍</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">NmapAutomator</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">Menu-driven Nmap automation with 11 specialized scan profiles designed for OSCP/HTB-style pentesting workflows. Zero external dependencies — just Python 3 and Nmap. Built for speed and efficiency.</p>
+            <div class="fp-tags"><span>Python</span><span>Nmap</span><span>OSCP</span><span>Automation</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">🪟</div>
-        <h3>Windows Security Enhancer</h3>
-        <p>Interactive system hardening toolkit implementing 66 security controls across 16 categories including UAC, Firewall, ASR rules, BitLocker, and Credential Guard. PowerShell-based with GUI interface.</p>
-        <div class="tech-stack">
-          <span>PowerShell</span><span>Security</span><span>Hardening</span><span>Windows</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb/Windows-Security-Enhancer">
+        <div class="fp-num">05</div>
+        <div class="fp-cat">System Hardening</div>
+        <div class="fp-icon">🪟</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">Windows Security Enhancer</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">Interactive hardening toolkit implementing 66 security controls across 16 categories — UAC, Firewall, ASR rules, BitLocker, and Credential Guard. PowerShell-based with full GUI interface.</p>
+            <div class="fp-tags"><span>PowerShell</span><span>Hardening</span><span>BitLocker</span><span>Windows</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">📡</div>
-        <h3>SIEM Threat Detection Platform</h3>
-        <p>End-to-end SIEM solution integrating Sysmon with Elasticsearch, Logstash, and Kibana for real-time threat detection. Custom KQL queries and alert correlation rules for security monitoring at scale.</p>
-        <div class="tech-stack">
-          <span>ELK Stack</span><span>Sysmon</span><span>KQL</span><span>SIEM</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb">
+        <div class="fp-num">06</div>
+        <div class="fp-cat">Threat Detection</div>
+        <div class="fp-icon">📡</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">SIEM Threat Detection Platform</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">End-to-end SIEM integrating Sysmon with Elasticsearch, Logstash, and Kibana for real-time threat detection. Custom KQL queries and alert correlation rules for security monitoring at scale.</p>
+            <div class="fp-tags"><span>ELK Stack</span><span>Sysmon</span><span>KQL</span><span>SIEM</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">🔊</div>
-        <h3>Alexa ARP MITM Tool</h3>
-        <p>IoT security research tool targeting Amazon Echo devices. Interactive wizard with subnet scanner, auto-detect gateway, BPF filtering, and full pcap capture. Demonstrates ARP-based attack vectors on smart home devices.</p>
-        <div class="tech-stack">
-          <span>Python</span><span>Scapy</span><span>IoT</span><span>Network</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb">
+        <div class="fp-num">07</div>
+        <div class="fp-cat">Network Security</div>
+        <div class="fp-icon">🔊</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">Alexa ARP MITM Tool</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">IoT security research tool targeting Amazon Echo devices. Interactive wizard with subnet scanner, auto-detect gateway, BPF filtering, and full pcap capture. Demonstrates ARP attack vectors on smart home devices.</p>
+            <div class="fp-tags"><span>Python</span><span>Scapy</span><span>IoT</span><span>ARP</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">📶</div>
-        <h3>Wifi-Killer Network Toolkit</h3>
-        <p>Network analysis toolkit featuring ARP-based host discovery, man-in-the-middle attacks, bandwidth control, and MAC anonymization. Dual interface — CLI for power users and GUI for accessibility.</p>
-        <div class="tech-stack">
-          <span>Python</span><span>Scapy</span><span>CLI+GUI</span><span>ARP</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb/Wifi-Killer">
+        <div class="fp-num">08</div>
+        <div class="fp-cat">Network Analysis</div>
+        <div class="fp-icon">📶</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">Wifi-Killer Network Toolkit</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">Network toolkit featuring ARP-based host discovery, man-in-the-middle attacks, bandwidth control, and MAC anonymization. Dual interface — CLI for power users and GUI for accessibility.</p>
+            <div class="fp-tags"><span>Python</span><span>Scapy</span><span>CLI+GUI</span><span>ARP</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">🥧</div>
-        <h3>H4ck3r's Pie</h3>
-        <p>"Most Emerging Project" award winner — multi-instrument cybersecurity device using Raspberry Pi 400 + Kali Linux. Swiss Army knife for ethical hackers with Rubber Ducky, WiFi deauth, RFID scanner, and IR blaster.</p>
-        <div class="tech-stack">
-          <span>Raspberry Pi 400</span><span>Kali Linux</span><span>Networking</span><span>Hardware</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb">
+        <div class="fp-num">09</div>
+        <div class="fp-cat">Hardware Security</div>
+        <div class="fp-icon">🥧</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">H4ck3r's Pie</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">"Most Emerging Project" award winner — multi-instrument cybersecurity device using Raspberry Pi 400 + Kali Linux. Swiss Army knife for ethical hackers: Rubber Ducky, WiFi deauth, RFID scanner, IR blaster.</p>
+            <div class="fp-tags"><span>Raspberry Pi 400</span><span>Kali Linux</span><span>Networking</span><span>Hardware</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
-      <div class="featured-card">
-        <div class="card-icon">🚁</div>
-        <h3>Parrot Bebop 2 Drone Exploits</h3>
-        <p>Denial-of-service proofs-of-concept against Parrot Bebop 2 drone — UDP ARNetwork flood attack and Wi-Fi deauthentication vector. For authorized security testing and IoT vulnerability research only.</p>
-        <div class="tech-stack">
-          <span>Python</span><span>Bash</span><span>UDP</span><span>WiFi</span><span>Drones</span>
+
+      <div class="featured-card" data-url="https://github.com/at0m-b0mb">
+        <div class="fp-num">10</div>
+        <div class="fp-cat">IoT Research</div>
+        <div class="fp-icon">🚁</div>
+        <div class="fp-bottom">
+          <h3 class="fp-title">Parrot Bebop 2 Drone Exploits</h3>
+          <div class="fp-reveal"><div class="fp-reveal-inner">
+            <p class="fp-desc">Denial-of-service proofs-of-concept against Parrot Bebop 2 — UDP ARNetwork flood attack and Wi-Fi deauthentication vector. For authorized security testing and IoT vulnerability research only.</p>
+            <div class="fp-tags"><span>Python</span><span>Bash</span><span>UDP</span><span>WiFi</span><span>Drones</span></div>
+          </div></div>
         </div>
+        <div class="fp-line"></div>
       </div>
+
     </div>
   </div>
   <div class="featured-progress"><div class="featured-progress-bar" id="featuredProgressBar"></div></div>
@@ -1711,6 +1836,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 // LENIS SMOOTH SCROLL
 // ===============================
 let lenis;
+let hasDragged=false;
 function initLenis(){
   lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),touchMultiplier:2});
   lenis.on('scroll',ScrollTrigger.update);
@@ -2052,10 +2178,10 @@ function initHorizontalScroll(){
   if(!wrap)return;
   // Drag to scroll
   let isDown=false,startX,scrollLeft;
-  wrap.addEventListener('mousedown',e=>{isDown=true;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;});
+  wrap.addEventListener('mousedown',e=>{isDown=true;hasDragged=false;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;});
   wrap.addEventListener('mouseleave',()=>{isDown=false;});
   wrap.addEventListener('mouseup',()=>{isDown=false;});
-  wrap.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();const x=e.pageX-wrap.offsetLeft;wrap.scrollLeft=scrollLeft-(x-startX)*1.5;});
+  wrap.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();hasDragged=true;const x=e.pageX-wrap.offsetLeft;wrap.scrollLeft=scrollLeft-(x-startX)*1.5;});
   // Mouse wheel converts vertical scroll to horizontal
   wrap.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){e.preventDefault();wrap.scrollLeft+=e.deltaY*1.5;}},{passive:false});
   // Progress bar
@@ -2067,7 +2193,7 @@ function initHorizontalScroll(){
   // Animate cards in on scroll to section
   const cards=wrap.querySelectorAll('.featured-card');
   cards.forEach((card,i)=>{
-    gsap.fromTo(card,{opacity:0,y:30,scale:.95},{opacity:1,y:0,scale:1,duration:.6,ease:'power3.out',delay:i*.08,scrollTrigger:{trigger:wrap,start:'top 85%',once:true}});
+    gsap.fromTo(card,{opacity:0,y:40,scale:.93},{opacity:1,y:0,scale:1,duration:.7,ease:'power3.out',delay:i*.07,scrollTrigger:{trigger:wrap,start:'top 88%',once:true}});
   });
 }
 
@@ -2376,48 +2502,78 @@ async function fetchRepos(){
   }
 }
 
+function timeAgo(iso){
+  const diff=(Date.now()-new Date(iso))/1000;
+  if(diff<60)return'just now';
+  if(diff<3600)return Math.floor(diff/60)+'m ago';
+  if(diff<86400)return Math.floor(diff/3600)+'h ago';
+  if(diff<2592000)return Math.floor(diff/86400)+'d ago';
+  if(diff<31536000)return Math.floor(diff/2592000)+'mo ago';
+  return Math.floor(diff/31536000)+'y ago';
+}
+
 function renderRepos(filter){
   const grid=document.getElementById('projectsGrid');
   const mainLangs=['Python','Go','Shell','PowerShell'];
-  // Always exclude forks
   let repos=allRepos.filter(r=>!r.fork);
-  // Sort by stars descending
-  repos.sort((a,b)=>b.stargazers_count-a.stargazers_count);
-  if(filter==='all'){
-    // "All" tab: top 12 so the page stays clean
+
+  if(filter==='recent'){
+    /* Sort by last push, show 12 with timestamp */
+    repos.sort((a,b)=>new Date(b.pushed_at)-new Date(a.pushed_at));
     repos=repos.slice(0,12);
-  } else if(filter==='Other'){
-    repos=repos.filter(r=>r.language&&!mainLangs.includes(r.language));
+    if(!repos.length){grid.innerHTML='<p style="color:var(--text-muted);text-align:center;grid-column:1/-1;font-family:var(--mono)">// No recent pushes found.</p>';return;}
+    grid.innerHTML=repos.map(r=>`
+      <div class="repo-card">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          <a href="${r.html_url}" target="_blank" rel="noopener noreferrer">${r.name}</a>
+        </h3>
+        <p>${r.description||'No description available.'}</p>
+        <div class="repo-meta">
+          ${r.language?`<span><span class="lang-dot" style="background:${langColors[r.language]||'#8b949e'}"></span>${r.language}</span>`:''}
+          ${r.stargazers_count?`<span>⭐ ${r.stargazers_count}</span>`:''}
+          <span style="margin-left:auto;color:var(--text-muted);font-size:.72rem">⏱ ${timeAgo(r.pushed_at)}</span>
+        </div>
+      </div>`).join('');
   } else {
-    repos=repos.filter(r=>r.language===filter);
+    /* Standard star-sorted view */
+    repos.sort((a,b)=>b.stargazers_count-a.stargazers_count);
+    if(filter==='all'){repos=repos.slice(0,12);}
+    else if(filter==='Other'){repos=repos.filter(r=>r.language&&!mainLangs.includes(r.language));}
+    else{repos=repos.filter(r=>r.language===filter);}
+    if(!repos.length){grid.innerHTML='<p style="color:var(--text-muted);text-align:center;grid-column:1/-1;font-family:var(--mono)">// No repos found for this filter.</p>';return;}
+    grid.innerHTML=repos.map(r=>`
+      <div class="repo-card">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          <a href="${r.html_url}" target="_blank" rel="noopener noreferrer">${r.name}</a>
+        </h3>
+        <p>${r.description||'No description available.'}</p>
+        <div class="repo-meta">
+          ${r.language?`<span><span class="lang-dot" style="background:${langColors[r.language]||'#8b949e'}"></span>${r.language}</span>`:''}
+          ${r.stargazers_count?`<span>⭐ ${r.stargazers_count}</span>`:''}
+          ${r.forks_count?`<span>🍴 ${r.forks_count}</span>`:''}
+        </div>
+      </div>`).join('');
   }
-  if(!repos.length){
-    grid.innerHTML='<p style="color:var(--text-muted);text-align:center;grid-column:1/-1;font-family:var(--mono)">// No repos found for this filter.</p>';
-    return;
-  }
-  grid.innerHTML=repos.map(r=>`
-    <div class="repo-card">
-      <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        <a href="${r.html_url}" target="_blank" rel="noopener noreferrer">${r.name}</a>
-      </h3>
-      <p>${r.description||'No description available.'}</p>
-      <div class="repo-meta">
-        ${r.language?`<span><span class="lang-dot" style="background:${langColors[r.language]||'#8b949e'}"></span>${r.language}</span>`:''}
-        ${r.stargazers_count?`<span>⭐ ${r.stargazers_count}</span>`:''}
-        ${r.forks_count?`<span>🍴 ${r.forks_count}</span>`:''}
-      </div>
-    </div>
-  `).join('');
   grid.querySelectorAll('.repo-card').forEach((card,i)=>{
     gsap.fromTo(card,{opacity:0,y:20},{opacity:1,y:0,duration:0.4,delay:i*0.05,ease:'power2.out'});
   });
 }
 
-// Filter buttons
-document.querySelectorAll('.filter-btn').forEach(btn=>{
+// Featured card click → open project URL (skip if user was dragging)
+document.querySelectorAll('.featured-card[data-url]').forEach(card=>{
+  card.addEventListener('click',()=>{
+    if(hasDragged)return;
+    const url=card.dataset.url;
+    if(url)window.open(url,'_blank','noopener,noreferrer');
+  });
+});
+
+// GitHub Repos filter buttons (all including the ⏱ Recent one)
+document.querySelectorAll('#projects .filter-btn').forEach(btn=>{
   btn.addEventListener('click',function(){
-    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('#projects .filter-btn').forEach(b=>b.classList.remove('active'));
     this.classList.add('active');
     renderRepos(this.dataset.filter);
   });
@@ -3278,13 +3434,12 @@ function triggerNeoSequence(){
   const mac=document.getElementById('mac');
   const laptopScene=document.getElementById('laptopScene');
   const macScreen=document.getElementById('macScreen');
+  const glowAura=document.querySelector('.mac-glow-aura');
   if(!mac||!laptopScene)return;
 
-  /* Detect touch-only devices — skip mouse tracking entirely */
   const isTouchDevice=window.matchMedia('(hover:none) and (pointer:coarse)').matches;
-  if(isTouchDevice)return; /* Let CSS handle everything on mobile */
+  if(isTouchDevice)return;
 
-  /* Get responsive scale based on current viewport width */
   function getResponsiveScale(){
     const w=window.innerWidth;
     if(w<=375)return 0.28;
@@ -3293,22 +3448,32 @@ function triggerNeoSequence(){
     return 0.58;
   }
 
-  /* Translation follow — whole scene follows cursor smoothly */
-  let targetX=0,targetY=0,currentX=0,currentY=0;
-  let moveTimer=null;
+  /* Glow position offset — keeps glow centred on the full laptop */
+  const GLOW_Y='calc(-50% - 148px)';
+  const IDLE_MS=3800; /* ms of no mouse movement before animation restores */
 
-  /* Tilt state — lerped each frame so there's never a snap */
-  let tiltTargetX=-6,tiltTargetY=0;   // mouse-driven targets
-  let tiltCurrentX=-6,tiltCurrentY=0; // smoothly interpolated values
-  let mouseActive=false;               // true once the user has moved the mouse
-  let animationKilled=false;           // track when CSS anim has been removed
+  let targetX=0,targetY=0,currentX=0,currentY=0;
+  let moveTimer=null,idleTimer=null;
+  let tiltTargetX=-6,tiltTargetY=0;
+  let tiltCurrentX=-6,tiltCurrentY=0;
+  let mouseActive=false;
+  let animationKilled=false;
+  let returning=false; /* true while lerping back to resting angle before CSS anim restores */
+
+  /* Called after IDLE_MS: target the resting angle and let the RAF lerp
+     smoothly return the laptop — CSS animation restores only when close enough */
+  function startReturn(){
+    returning=true;
+    tiltTargetX=-6;
+    tiltTargetY=0;
+    targetX=0;
+    targetY=0;
+  }
 
   document.addEventListener('mousemove',e=>{
-    /* Translate: follow mouse across viewport */
-    targetX=(e.clientX/innerWidth-0.5)*180;
-    targetY=(e.clientY/innerHeight-0.5)*120;
+    targetX=(e.clientX/innerWidth-0.5)*100;
+    targetY=(e.clientY/innerHeight-0.5)*70;
 
-    /* Glare position relative to screen */
     if(macScreen){
       const sr=macScreen.getBoundingClientRect();
       const gx=((e.clientX-sr.left)/sr.width*100).toFixed(1);
@@ -3321,55 +3486,75 @@ function triggerNeoSequence(){
       macScreen.classList.add('glare-active');
     }
 
-    /* Update tilt targets — the RAF loop lerps toward these */
-    tiltTargetY=(e.clientX/innerWidth-0.5)*16;
-    tiltTargetX=(e.clientY/innerHeight-0.5)*-6-6;
+    tiltTargetY=(e.clientX/innerWidth-0.5)*12;
+    tiltTargetX=(e.clientY/innerHeight-0.5)*-5-6;
 
-    /* On first mouse move, seed current tilt from the CSS animation's
-       live computed matrix so there's no discontinuity */
     if(!mouseActive){
+      /* Seed from live transform — works whether CSS anim or JS transform is active */
       const m=new DOMMatrix(getComputedStyle(mac).transform);
-      /* Extract rotX and rotY from the 4×4 matrix */
       tiltCurrentX=Math.atan2(-m.m32,m.m33)*(180/Math.PI);
       tiltCurrentY=Math.asin(m.m31)*(180/Math.PI);
       mouseActive=true;
+      returning=false; /* cancel any in-progress return */
     }
 
-    /* Fade glare after mouse stops */
+    clearTimeout(idleTimer);
+    idleTimer=setTimeout(startReturn,IDLE_MS);
+
     clearTimeout(moveTimer);
     moveTimer=setTimeout(()=>{if(macScreen)macScreen.classList.remove('glare-active');},600);
   });
 
-  /* Unified RAF loop — handles both translation follow and tilt lerp */
+  /* Unified RAF loop */
   (function loop(){
     const scale=getResponsiveScale();
-    /* Scene translation */
-    currentX+=(targetX-currentX)*0.07;
-    currentY+=(targetY-currentY)*0.07;
+    currentX+=(targetX-currentX)*0.04;
+    currentY+=(targetY-currentY)*0.04;
     laptopScene.style.transform='scale('+scale+') translate('+currentX+'px,'+currentY+'px)';
 
-    if(mouseActive){
-      /* Kill the CSS animation only after we've seeded currentTilt from it —
-         this way the first lerp step starts from the actual animated angle */
+    if(mouseActive||returning){
       if(!animationKilled){
         mac.style.animation='none';
+        if(glowAura)glowAura.style.animation='none';
         animationKilled=true;
       }
-      /* Smooth lerp toward mouse-driven target — 0.08 gives a ~12-frame ease */
-      tiltCurrentX+=(tiltTargetX-tiltCurrentX)*0.08;
-      tiltCurrentY+=(tiltTargetY-tiltCurrentY)*0.08;
-      mac.style.transform='rotateX('+tiltCurrentX.toFixed(3)+'deg) rotateY('+tiltCurrentY.toFixed(3)+'deg)';
+      tiltCurrentX+=(tiltTargetX-tiltCurrentX)*0.045;
+      tiltCurrentY+=(tiltTargetY-tiltCurrentY)*0.045;
+      const rx=tiltCurrentX.toFixed(3);
+      const ry=tiltCurrentY.toFixed(3);
+      mac.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)';
+      if(glowAura){
+        glowAura.style.transform='translate(-50%,'+GLOW_Y+') rotateX('+rx+'deg) rotateY('+ry+'deg)';
+      }
+      /* Once the lerp has settled back at resting angle, bridge to CSS anim via transition */
+      if(returning&&Math.abs(tiltCurrentX-(-6))<0.12&&Math.abs(tiltCurrentY)<0.12&&Math.abs(currentX)<0.8&&Math.abs(currentY)<0.8){
+        returning=false;
+        mouseActive=false;
+        /* Use a smooth CSS transition to swing to the exact 0% keyframe (-6,-28deg)
+           so the CSS animation can resume from there with zero jump */
+        const ease='cubic-bezier(.25,.46,.45,.94)';
+        mac.style.transition='transform 2s '+ease;
+        mac.style.transform='rotateX(-6deg) rotateY(-28deg)';
+        if(glowAura){
+          glowAura.style.transition='transform 2s '+ease;
+          glowAura.style.transform='translate(-50%,'+GLOW_Y+') rotateX(-6deg) rotateY(-28deg)';
+        }
+        setTimeout(()=>{
+          /* Clear inline styles atomically — CSS animation takes over from the same position */
+          mac.style.transition='';mac.style.transform='';mac.style.animation='';
+          if(glowAura){glowAura.style.transition='';glowAura.style.transform='';glowAura.style.animation='';}
+          animationKilled=false;
+        },2020);
+      }
     }
 
     requestAnimationFrame(loop);
   })();
 
-  /* Reset on mouse leave */
   document.addEventListener('mouseleave',()=>{
     targetX=0;targetY=0;
     if(macScreen)macScreen.classList.remove('glare-active');
-    /* Restore CSS animation only if mouse never engaged (page load edge case) */
-    if(!mouseActive)mac.style.animation='';
+    if(!mouseActive&&!returning){mac.style.animation='';if(glowAura)glowAura.style.animation='';}
   });
 })();
 
