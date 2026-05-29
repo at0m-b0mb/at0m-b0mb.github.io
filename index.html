@@ -1333,7 +1333,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
         <span class="stat-label">GitHub Repos</span>
       </div>
       <div class="stat-card">
-        <span class="stat-number" data-target="20">0</span>
+        <span class="stat-number" id="securityToolStat" data-target="20">0</span>
         <span class="stat-label">Security Tools Built</span>
       </div>
       <div class="stat-card">
@@ -1923,18 +1923,44 @@ function initSite(){
   const chars='アカサタナハマヤラワ0123456789ABCDEF@#$%^&*()_+-={}[]|:;<>?/~';
 
   function init(resetDrops){
-    /* Use actual CSS-rendered size so canvas always fills the visible area exactly */
-    w=canvas.width=canvas.offsetWidth||window.innerWidth;
-    h=canvas.height=canvas.offsetHeight||window.innerHeight;
-    /* Larger font on mobile = fewer columns = less work */
+    const newW=canvas.offsetWidth||window.innerWidth;
+    const newH=canvas.offsetHeight||window.innerHeight;
     fontSize=isMobile?18:14;
-    const newColumns=Math.ceil(w/fontSize);
-    /* Only reset drop positions if column count actually changed or explicitly requested.
-       Height-only changes (mobile URL-bar show/hide) must NOT reset drops — that is
-       what caused the matrix to restart on every tap/scroll. */
-    if(resetDrops||newColumns!==columns){
+
+    if(newW!==w){
+      /* Width changed — must resize canvas (column count changes).
+         Snapshot current frame first so the resize doesn't flash blank. */
+      if(w&&h&&drops){
+        const tmp=document.createElement('canvas');
+        tmp.width=w;tmp.height=h;
+        tmp.getContext('2d').drawImage(canvas,0,0);
+        w=canvas.width=newW;
+        h=canvas.height=newH;
+        ctx.drawImage(tmp,0,0,newW,newH);
+      } else {
+        w=canvas.width=newW;
+        h=canvas.height=newH;
+      }
+      /* Blend existing columns into the new array rather than resetting all to 1 */
+      const newColumns=Math.ceil(w/fontSize);
+      if(resetDrops||!drops){
+        drops=Array(newColumns).fill(1);
+      } else {
+        const old=drops.slice();
+        drops=Array(newColumns).fill(0).map((_,i)=>
+          i<old.length ? old[i] : Math.floor(Math.random()*(newH/fontSize)));
+      }
       columns=newColumns;
-      drops=Array(columns).fill(1);
+    } else {
+      /* Height-only change (mobile URL-bar show/hide) — update JS boundary only.
+         Touching canvas.width or canvas.height clears the canvas even when the
+         value is identical, which caused the visible matrix restart on every scroll. */
+      h=newH;
+      const newColumns=Math.ceil(w/fontSize);
+      if(newColumns!==columns){
+        columns=newColumns;
+        if(!drops)drops=Array(columns).fill(1);
+      }
     }
     prevW=w;
   }
@@ -2498,12 +2524,24 @@ const langColors={
   PHP:'#4F5D95',R:'#198CE7'
 };
 
+/* Cybersecurity topics — any repo tagged with these counts as a security tool */
+const SECURITY_TOPICS=new Set([
+  'cybersecurity','ethical-hacking','penetration-testing','security','forensics',
+  'osint','network-security','malware-analysis','red-teaming','ctf','infosec',
+  'password-cracker','brute-force','wifi-security','iot-security','anti-vm',
+  'stealth','hacking-tools','kali-linux','oscp','htb','pentesting',
+  'vulnerability-analysis','arp-spoofing','mitm','dos','keylogger',
+  'digital-forensics','security-tool','privacy','encryption','uac','hardening'
+]);
+
 async function fetchRepos(){
+  /* Accept header ensures the `topics` array is included in every repo object */
+  const ghHeaders={headers:{'Accept':'application/vnd.github+json'}};
   try{
     // Fetch user info and first page in parallel
     const [page1Resp,userResp]=await Promise.all([
-      fetch('https://api.github.com/users/at0m-b0mb/repos?sort=updated&per_page=100&page=1'),
-      fetch('https://api.github.com/users/at0m-b0mb')
+      fetch('https://api.github.com/users/at0m-b0mb/repos?sort=updated&per_page=100&page=1',ghHeaders),
+      fetch('https://api.github.com/users/at0m-b0mb',ghHeaders)
     ]);
     const page1=await page1Resp.json();
     const user=await userResp.json();
@@ -2514,17 +2552,29 @@ async function fetchRepos(){
       const extraPages=Math.ceil((total-100)/100);
       const extras=await Promise.all(
         Array.from({length:extraPages},(_,i)=>
-          fetch(`https://api.github.com/users/at0m-b0mb/repos?sort=updated&per_page=100&page=${i+2}`).then(r=>r.json())
+          fetch(`https://api.github.com/users/at0m-b0mb/repos?sort=updated&per_page=100&page=${i+2}`,ghHeaders).then(r=>r.json())
         )
       );
       extras.forEach(page=>{if(Array.isArray(page))allRepos=allRepos.concat(page);});
     }
-    // Update stat counter with true total
+    // Update GitHub repos stat counter with true total
     if(total){
       const statEl=document.getElementById('githubRepoStat');
       if(statEl){
         statEl.dataset.target=total;
         if(parseInt(statEl.textContent)>0) animateStatTo(statEl,total);
+      }
+    }
+    // Count non-fork repos that have at least one recognised cybersecurity topic
+    const securityCount=allRepos.filter(r=>
+      !r.fork && Array.isArray(r.topics) && r.topics.some(t=>SECURITY_TOPICS.has(t))
+    ).length;
+    if(securityCount>0){
+      const toolEl=document.getElementById('securityToolStat');
+      if(toolEl){
+        toolEl.dataset.target=securityCount;
+        /* If the scroll-triggered counter already ran, re-animate to the real value */
+        if(parseInt(toolEl.textContent)>0) animateStatTo(toolEl,securityCount);
       }
     }
     // "View all" button shows true public total from GitHub
