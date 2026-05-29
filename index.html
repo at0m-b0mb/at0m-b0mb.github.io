@@ -169,6 +169,32 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .navbar .container{display:flex;align-items:center;justify-content:space-between}
 .nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:700;font-size:1.2rem;color:var(--green)}
 .nav-logo svg{width:32px;height:32px}
+/* Crown + KP glitch */
+.nav-crown{font-size:1.5rem;line-height:1;display:inline-block;position:relative}
+.nav-kp{display:inline-block;position:relative}
+@keyframes crown-glitch{
+  0%,100%{transform:translate(0,0);filter:none}
+  10%{transform:translate(-2px,1px);filter:hue-rotate(180deg) brightness(1.8)}
+  20%{transform:translate(2px,-1px);filter:hue-rotate(90deg) saturate(3) brightness(2)}
+  25%{transform:translate(-1px,2px) skewX(8deg);filter:hue-rotate(270deg) brightness(1.5)}
+  30%{transform:translate(0,0);filter:none}
+  60%{transform:translate(0,0);filter:none}
+  65%{transform:translate(2px,0) skewX(-4deg);filter:brightness(2) saturate(2)}
+  70%{transform:translate(-2px,0);filter:hue-rotate(120deg)}
+  75%{transform:translate(0,0);filter:none}
+}
+@keyframes kp-glitch{
+  0%,100%{transform:translate(0,0);clip-path:none;color:var(--green);text-shadow:none}
+  10%{transform:translate(-3px,0);clip-path:inset(10% 0 40% 0);color:#0ff;text-shadow:2px 0 #f0f,-2px 0 #0ff}
+  15%{transform:translate(3px,0);clip-path:inset(50% 0 10% 0);color:#f0f;text-shadow:-2px 0 #0ff,2px 0 #f0f}
+  20%{transform:translate(0,0);clip-path:none;color:var(--green);text-shadow:none}
+  65%{transform:translate(0,0);color:var(--green);text-shadow:none}
+  68%{transform:translate(2px,-1px);color:#0ff;text-shadow:-1px 0 #f0f}
+  72%{transform:translate(-2px,1px);color:#f0f;text-shadow:1px 0 #0ff}
+  76%{transform:translate(0,0);color:var(--green);text-shadow:none}
+}
+.nav-crown.glitching{animation:crown-glitch .45s steps(1) forwards}
+.nav-kp.glitching{animation:kp-glitch .45s steps(1) forwards}
 .nav-links{display:flex;align-items:center;gap:28px;list-style:none}
 .nav-links a,.nav-links button{position:relative}
 .nav-link{color:var(--text-secondary);font-family:var(--mono);font-size:.85rem;font-weight:500;transition:color .3s;position:relative;display:inline-block}
@@ -643,38 +669,53 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
    z-index:0 + before .mac in DOM = always behind. */
 .mac-glow-aura{
   position:absolute;
-  width:860px;
-  height:660px;
+  /* Layer 1 — wide atmospheric warmth: invisible as a shape, just fills the scene */
+  width:900px;
+  height:620px;
   top:50%; left:50%;
-  border-radius:44% 44% 52% 52% / 36% 36% 56% 56%;
-  border:none;
-  /* 5-layer gradient: screen core → halo → ambient fill → keyboard warmth → chromatic fringe */
-  background:
-    radial-gradient(ellipse 34% 24% at 50% 30%, rgba(255,248,210,.28) 0%, rgba(246,220,110,.14) 42%, transparent 80%),
-    radial-gradient(ellipse 60% 44% at 50% 36%, rgba(203,155,81,.22) 0%, rgba(180,118,36,.10) 55%, transparent 86%),
-    radial-gradient(ellipse 90% 74% at 50% 52%, rgba(155,95,22,.15) 0%, rgba(110,65,12,.05) 66%, transparent 90%),
-    radial-gradient(ellipse 46% 28% at 50% 81%, rgba(203,155,81,.09) 0%, rgba(150,90,18,.03) 64%, transparent 88%),
-    radial-gradient(ellipse 96% 86% at 50% 50%, rgba(80,160,255,.025) 58%, transparent 84%);
+  border-radius:50%;
+  background:radial-gradient(ellipse 68% 58% at 50% 44%,
+    rgba(180,108,20,.11) 0%,
+    rgba(130,75,12,.05) 48%,
+    transparent 72%);
   pointer-events:none;
   z-index:0;
-  filter:blur(28px);
+  filter:blur(60px);
   animation:
     glow-full-spin  14s ease-in-out infinite,
     edge-breathe    4.5s ease-in-out infinite;
 }
-.mac-glow-aura::before,.mac-glow-aura::after{content:none;display:none;}
+/* Layer 2 — screen-face emission: the actual visible glow, screen-shaped */
+.mac-glow-aura::before{
+  content:'';
+  position:absolute;
+  top:50%;left:50%;
+  width:488px;height:314px;
+  /* shift upward inside parent to align with screen face */
+  transform:translate(-50%,-54%);
+  border-radius:13px;
+  background:transparent;
+  box-shadow:
+    0 0 14px  5px  rgba(255,248,205,.18),
+    0 0 38px  18px rgba(218,165,58,.15),
+    0 0 75px  36px rgba(178,115,28,.10),
+    0 0 130px 58px rgba(130,78,16,.06),
+    0 24px 75px 38px rgba(175,108,22,.08);
+  filter:blur(2px);
+}
+.mac-glow-aura::after{content:none;display:none;}
 
 /* Track the full laptop (lid + hinge + base), matching .mac spin animation exactly */
 @keyframes glow-full-spin{
-  0%  {transform:translate(-50%,calc(-50% - 148px)) rotateX(-6deg)  rotateY(-28deg) translateY(0px);}
-  25% {transform:translate(-50%,calc(-50% - 148px)) rotateX(-10deg) rotateY(0deg)   translateY(-6px);}
-  50% {transform:translate(-50%,calc(-50% - 148px)) rotateX(-6deg)  rotateY(28deg)  translateY(0px);}
-  75% {transform:translate(-50%,calc(-50% - 148px)) rotateX(-10deg) rotateY(0deg)   translateY(-6px);}
-  100%{transform:translate(-50%,calc(-50% - 148px)) rotateX(-6deg)  rotateY(-28deg) translateY(0px);}
+  0%  {transform:translate(-50%,calc(-50% - 120px)) rotateX(-6deg)  rotateY(-28deg) translateY(0px);}
+  25% {transform:translate(-50%,calc(-50% - 120px)) rotateX(-10deg) rotateY(0deg)   translateY(-6px);}
+  50% {transform:translate(-50%,calc(-50% - 120px)) rotateX(-6deg)  rotateY(28deg)  translateY(0px);}
+  75% {transform:translate(-50%,calc(-50% - 120px)) rotateX(-10deg) rotateY(0deg)   translateY(-6px);}
+  100%{transform:translate(-50%,calc(-50% - 120px)) rotateX(-6deg)  rotateY(-28deg) translateY(0px);}
 }
 @keyframes edge-breathe{
-  0%,100%{opacity:.55;filter:blur(28px);}
-  50%    {opacity:.82;filter:blur(22px);}
+  0%,100%{opacity:.62;}
+  50%    {opacity:.92;}
 }
 
 .scene{perspective:1800px;perspective-origin:50% 42%;position:relative;display:flex;justify-content:center;align-items:center}
@@ -1103,15 +1144,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 <nav class="navbar" id="navbar">
   <div class="container">
     <a href="#home" class="nav-logo">
-      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="12" r="10" stroke="#00ff41" stroke-width="2"/>
-        <circle cx="12" cy="10" r="2" fill="#00ff41"/>
-        <circle cx="20" cy="10" r="2" fill="#00ff41"/>
-        <path d="M10 15 Q16 20 22 15" stroke="#00ff41" stroke-width="1.5" fill="none"/>
-        <path d="M8 22 L16 28 L24 22" stroke="#00ff41" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <line x1="16" y1="22" x2="16" y2="26" stroke="#00ff41" stroke-width="2"/>
-      </svg>
-      <span>KP</span>
+      <span class="nav-crown" id="navCrown">👑</span>
+      <span class="nav-kp" id="navKP">KP</span>
     </a>
     <ul class="nav-links">
       <li><a href="#home" class="nav-link magnetic" data-strength="20">Home</a></li>
@@ -3449,7 +3483,7 @@ function triggerNeoSequence(){
   }
 
   /* Glow position offset — keeps glow centred on the full laptop */
-  const GLOW_Y='calc(-50% - 148px)';
+  const GLOW_Y='calc(-50% - 120px)';
   const IDLE_MS=3800; /* ms of no mouse movement before animation restores */
 
   let targetX=0,targetY=0,currentX=0,currentY=0;
@@ -3556,6 +3590,23 @@ function triggerNeoSequence(){
     if(macScreen)macScreen.classList.remove('glare-active');
     if(!mouseActive&&!returning){mac.style.animation='';if(glowAura)glowAura.style.animation='';}
   });
+})();
+
+/* ============ NAV LOGO GLITCH ============ */
+(function(){
+  const crown=document.getElementById('navCrown');
+  const kp=document.getElementById('navKP');
+  if(!crown||!kp)return;
+  function triggerGlitch(){
+    crown.classList.add('glitching');
+    kp.classList.add('glitching');
+    setTimeout(()=>{crown.classList.remove('glitching');kp.classList.remove('glitching');},460);
+  }
+  /* Random interval between 3–7s */
+  function scheduleNext(){setTimeout(()=>{triggerGlitch();scheduleNext();},3000+Math.random()*4000);}
+  scheduleNext();
+  /* Also glitch on hover */
+  document.querySelector('.nav-logo').addEventListener('mouseenter',triggerGlitch);
 })();
 
 /* ============ MACBOOK LIVE CLOCK ============ */
