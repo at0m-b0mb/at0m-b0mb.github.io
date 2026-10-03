@@ -2616,6 +2616,7 @@ function renderRepos(filter){
         <div class="repo-meta">
           ${r.language?`<span><span class="lang-dot" style="background:${langColors[r.language]||'#8b949e'}"></span>${r.language}</span>`:''}
           ${r.stargazers_count?`<span>⭐ ${r.stargazers_count}</span>`:''}
+          ${r.homepage?`<span><a href="${r.homepage}" target="_blank" rel="noopener noreferrer" style="color:var(--green);text-decoration:none">↗ Site</a></span>`:''}
           <span style="margin-left:auto;color:var(--text-muted);font-size:.72rem">⏱ ${timeAgo(r.pushed_at)}</span>
         </div>
       </div>`).join('');
@@ -2637,6 +2638,7 @@ function renderRepos(filter){
           ${r.language?`<span><span class="lang-dot" style="background:${langColors[r.language]||'#8b949e'}"></span>${r.language}</span>`:''}
           ${r.stargazers_count?`<span>⭐ ${r.stargazers_count}</span>`:''}
           ${r.forks_count?`<span>🍴 ${r.forks_count}</span>`:''}
+          ${r.homepage?`<span><a href="${r.homepage}" target="_blank" rel="noopener noreferrer" style="color:var(--green);text-decoration:none">↗ Site</a></span>`:''}
         </div>
       </div>`).join('');
   }
