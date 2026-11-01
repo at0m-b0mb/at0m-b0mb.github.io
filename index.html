@@ -94,6 +94,13 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
   --glass-bg-hi:#1c222b;           /* 1.27:1 - the raised state                 */
   --glass-border:1px solid rgba(0,255,65,.26);
   --glass-blur:blur(20px);
+  /* The properties the glass surfaces' hover/active/focus rules actually
+     change. `transition:all` also re-interpolated whatever GSAP was
+     tweening, which is why 56 transitions were running on the skill tags
+     at rest. Layout properties are deliberately absent - nothing animates
+     them, and `all` invited the browser to watch for it anyway. */
+  --t-glass:background-color .4s,border-color .4s,color .4s,box-shadow .4s,transform .4s,filter .4s;
+  --t-glass-fast:background-color .3s,border-color .3s,color .3s,box-shadow .3s,transform .3s,filter .3s;
   /* Dark-UI elevation: a lit top edge implying a light source above, plus a
      cast shadow. Without these a bordered rectangle is just a rectangle. */
   --lift-rest:inset 0 1px 0 rgba(255,255,255,.055),0 10px 24px -14px #000;
@@ -163,7 +170,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .loading-lock.unlocked .loading-lock-label{opacity:1}
 
 /* ========== PROGRESS BAR ========== */
-.page-progress{position:fixed;top:0;left:0;width:0;height:2px;background:var(--green);z-index:10001;pointer-events:none;box-shadow:0 0 8px var(--green);transition:none}
+.page-progress{position:fixed;top:0;left:0;width:100%;height:2px;background:var(--green);z-index:10001;pointer-events:none;box-shadow:0 0 8px var(--green);transition:none;transform:scaleX(0);transform-origin:left center;will-change:transform}
 
 /* ========== CUSTOM CURSOR (Desktop) ========== */
 @media(hover:hover){
@@ -310,6 +317,21 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .anim-ready .hero-title .char{opacity:0;transform:translateY(60px) rotateX(-90deg)}
 .hero-title .char{display:inline-block;transform-origin:bottom;background:linear-gradient(90deg,#462523,#cb9b51,#f6e27a,#f6f2c0,#f6e27a,#cb9b51,#462523,#cb9b51,#f6e27a,#f6f2c0,#f6e27a,#cb9b51,#462523);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:400% 100%;animation:gold-flow 6s linear infinite;filter:drop-shadow(0 0 3px rgba(246,226,122,.5)) drop-shadow(0 0 12px rgba(203,155,81,.2))}
 @keyframes gold-flow{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+/* gold-flow is applied per character, and animates `background-position`,
+   which cannot be composited - so each character repaints every frame, with
+   its drop-shadow filter re-applied. Measured 91 running at once with the
+   page at the very top, i.e. every heading in the document including the
+   ones far below the fold. Paused unless the heading is actually on screen;
+   `animation-play-state` keeps the progress, so it resumes mid-sweep.
+   Keyed on a class JS adds, so with JS off nothing is frozen. */
+html.shimmer-gated .section-title .char.revealed,
+html.shimmer-gated .hero-title .char,
+html.shimmer-gated .about-text h2,
+html.shimmer-gated .footer-connect{animation-play-state:paused}
+html.shimmer-gated .section-title.shimmer-on .char.revealed,
+html.shimmer-gated .hero-title.shimmer-on .char,
+html.shimmer-gated .about-text h2.shimmer-on,
+html.shimmer-gated .footer-connect.shimmer-on{animation-play-state:running}
 .hero-subtitle{font-family:var(--mono);font-size:clamp(.9rem,2vw,1.2rem);color:var(--green);min-height:2em;display:flex;align-items:center;justify-content:center;gap:0;width:100%;max-width:100%;flex-wrap:wrap;text-align:center}
 .hero-subtitle .cursor{display:inline-block;width:10px;height:1.3em;background:var(--green);animation:blink 1s step-end infinite;margin-left:2px;vertical-align:middle}
 #typewriter{overflow-wrap:break-word;word-break:break-word}
@@ -354,14 +376,21 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .skills-wrap h3{font-family:var(--display);font-size:clamp(1rem,1.5vw,1.1rem);margin-bottom:20px;color:var(--green)}
 .skills-wrap h3::before{content:'$ '}
 .skill-tags{display:flex;flex-wrap:wrap;gap:10px}
-.skill-tag{font-family:var(--mono);font-size:.8rem;padding:6px 14px;background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:var(--glass-border);border-radius:4px;color:var(--text-secondary);transition:all .3s;cursor:default}
+/* `opacity` is appended HERE rather than added to --t-glass-fast, because
+   .skill-tag is the only one of the seven glass classes whose reveal is a
+   pure class toggle (.anim-ready .skill-tag -> .skill-tag.revealed, applied
+   by initSkillTags on a 50ms stagger with no GSAP tween behind it). The card
+   classes are revealed by GSAP tweening opacity, so putting opacity in the
+   shared token would re-create the transition-vs-GSAP double interpolation
+   that narrowing the list was meant to remove. */
+.skill-tag{font-family:var(--mono);font-size:.8rem;padding:6px 14px;background:var(--glass-bg);border:var(--glass-border);border-radius:4px;color:var(--text-secondary);transition:var(--t-glass-fast),opacity .3s;cursor:default}
 .anim-ready .skill-tag{opacity:0;transform:translateX(-20px)}
 .skill-tag.revealed{opacity:1;transform:translateX(0)}
 .skill-tag:hover{border-color:var(--green);color:var(--green);box-shadow:var(--glow-green);transform:translateY(-2px)}
 
 /* Stats */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:60px}
-.stat-card{box-shadow:var(--lift-rest);background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:var(--glass-border);border-radius:12px;padding:28px;text-align:center;transition:all .4s}
+.stat-card{box-shadow:var(--lift-rest);background:var(--glass-bg);border:var(--glass-border);border-radius:12px;padding:28px;text-align:center;transition:var(--t-glass)}
 .stat-card:hover{border-color:var(--green);background:var(--glass-bg-hi);box-shadow:var(--glow-green),var(--lift-hover);transform:translateY(-4px)}
 .stat-number{font-family:var(--display);font-size:clamp(1.8rem,3vw,2.5rem);font-weight:700;color:var(--green);display:block;line-height:1.1;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
 .stat-label{font-size:clamp(.75rem,1vw,.85rem);color:var(--text-secondary);margin-top:4px}
@@ -399,7 +428,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 /* ========== PROJECTS (GitHub) ========== */
 .projects{padding:var(--section-padding);position:relative;z-index:1}
 .filter-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:40px}
-.filter-btn{font-family:var(--mono);font-size:.8rem;padding:8px 18px;background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:var(--glass-border);border-radius:4px;color:var(--text-secondary);cursor:pointer;transition:all .3s}
+.filter-btn{font-family:var(--mono);font-size:.8rem;padding:8px 18px;background:var(--glass-bg);border:var(--glass-border);border-radius:4px;color:var(--text-secondary);cursor:pointer;transition:var(--t-glass-fast)}
 .filter-btn:hover{border-color:rgba(0,255,65,.55);color:var(--green);box-shadow:0 0 10px rgba(0,255,65,.18)}
 .filter-btn.active{border-color:var(--green);color:#071008;font-weight:600;background:var(--green);box-shadow:var(--glow-green)}
 .filter-btn.active:hover{filter:brightness(1.08);color:#071008}
@@ -408,9 +437,16 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .view-all-btn:hover{background:rgba(0,255,65,.14);box-shadow:var(--glow-green);transform:translateY(-2px);border-color:var(--green);color:var(--green)}
 .view-all-btn svg{width:16px;height:16px;stroke:currentColor;flex-shrink:0}
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
-.repo-card{box-shadow:var(--lift-rest);background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:var(--glass-border);border-radius:12px;padding:24px;transition:all .4s;display:flex;flex-direction:column;position:relative;overflow:hidden}
-.repo-card::before{content:'';position:absolute;inset:-2px;border-radius:14px;padding:2px;background:conic-gradient(from var(--angle,0deg),transparent 40%,var(--green) 50%,var(--cyan) 60%,transparent 70%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;pointer-events:none;transition:opacity .4s;animation:rotate-gradient 3s linear infinite}
-.repo-card:hover::before{opacity:1}
+.repo-card{box-shadow:var(--lift-rest);background:var(--glass-bg);border:var(--glass-border);border-radius:12px;padding:24px;transition:var(--t-glass);display:flex;flex-direction:column;position:relative;overflow:hidden;isolation:isolate}
+.repo-card::before{content:'';position:absolute;inset:-2px;border-radius:14px;padding:2px;background:conic-gradient(from var(--angle,0deg),transparent 40%,var(--green) 50%,var(--cyan) 60%,transparent 70%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;pointer-events:none;/* Asymmetric on purpose. `animation-play-state` is not transitionable, so on
+   mouse-out the spin stops on the same frame the pointer leaves while the
+   border is still fading - a motionless arc fading out over the full 400ms.
+   Hover-in keeps the slow fade; hover-out is quick enough that the frozen
+   frame is not perceptible. The at-rest `paused` is where the saving is. */
+transition:opacity .12s;/* Paused at rest: twelve of these spun forever at opacity 0, repainting a
+   masked conic gradient per card per frame for a border nobody could see. */
+animation:rotate-gradient 3s linear infinite paused}
+.repo-card:hover::before{opacity:1;animation-play-state:running;transition:opacity .4s}
 .repo-card:hover{background:var(--glass-bg-hi);box-shadow:var(--lift-hover);transform:translateY(-4px)}
 .repo-card h3{font-family:var(--display);font-size:.95rem;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .repo-card h3 svg{width:16px;height:16px;flex-shrink:0;stroke:var(--text-muted)}
@@ -467,7 +503,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 /* ========== YOUTUBE ========== */
 .youtube{padding:var(--section-padding);position:relative;z-index:1}
 .youtube-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
-.yt-card{box-shadow:var(--lift-rest);background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:var(--glass-border);border-radius:12px;overflow:hidden;transition:all .4s;display:block}
+.yt-card{box-shadow:var(--lift-rest);background:var(--glass-bg);border:var(--glass-border);border-radius:12px;overflow:hidden;transition:var(--t-glass);display:block}
 .yt-card:hover{border-color:rgba(255,45,45,.55);background:var(--glass-bg-hi);box-shadow:0 0 14px rgba(255,45,45,.18),var(--lift-hover);transform:translateY(-4px)}
 .yt-card .thumb{position:relative;padding-top:56.25%;overflow:hidden}
 .yt-card .thumb img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:saturate(.6) brightness(.85);transition:transform .6s,filter .5s}
@@ -483,7 +519,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 /* ========== CERTIFICATIONS ========== */
 .certifications{padding:var(--section-padding);position:relative;z-index:1}
 .certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.cert-card{box-shadow:var(--lift-rest);background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:var(--glass-border);border-radius:12px;padding:20px;display:flex;align-items:start;gap:14px;transition:all .4s}
+.cert-card{box-shadow:var(--lift-rest);background:var(--glass-bg);border:var(--glass-border);border-radius:12px;padding:20px;display:flex;align-items:start;gap:14px;transition:var(--t-glass)}
 .cert-card:hover{border-color:var(--green);background:var(--glass-bg-hi);box-shadow:var(--glow-green),var(--lift-hover);transform:translateY(-4px)}
 .cert-icon{font-size:1.6rem;flex-shrink:0;margin-top:2px}
 .cert-card h3{font-family:var(--display);font-size:.9rem;color:var(--text-primary);margin-bottom:4px}
@@ -533,7 +569,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk','JetBrains Mono',monospace;color:#
 .monitor-dl-main.intl:hover{background:rgba(0,212,255,.18);box-shadow:var(--glow-cyan);color:var(--cyan)}
 .monitor-dl-hint{font-family:var(--mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.5px}
 .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:30px;max-width:800px;margin-left:auto;margin-right:auto}
-.contact-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:var(--glass-border);border-radius:8px;box-shadow:var(--lift-rest);transition:all .3s}
+.contact-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--glass-bg);border:var(--glass-border);border-radius:8px;box-shadow:var(--lift-rest);transition:var(--t-glass-fast)}
 .contact-item:hover{border-color:var(--green);background:var(--glass-bg-hi);box-shadow:var(--glow-green),var(--lift-hover)}
 .contact-item svg{width:18px;height:18px;stroke:var(--green);flex-shrink:0}
 .contact-item span{font-size:.85rem;color:var(--text-secondary)}
@@ -2419,6 +2455,7 @@ function initSite(){
   step('profileImageEasterEgg', initProfileImageEasterEgg);
   step('konamiCode', initKonamiCode);
   step('goldShine', initGoldShine);
+  step('shimmerGate', initShimmerGate);
   step('cardKeyboardAccess', initCardKeyboardAccess);
   step('repos', fetchRepos);
   step('linkedIn', fetchLinkedInData);
@@ -2498,6 +2535,14 @@ function initCardKeyboardAccess(){
     /* The bitmap is sized in DEVICE pixels and the context is scaled, so every
        glyph is drawn at the display's real resolution instead of being upscaled
        from CSS pixels. Capped at 2 so a 3x phone does not pay triple fill cost.
+
+       This was briefly lowered to 1.5 to cut fill cost, which was a mistake: on a
+       2x display a 1.5x bitmap is composited onto the device grid at 1.333x, so
+       every glyph is resampled where it used to land on exact device pixels. The
+       fill cost is no longer the problem it was - the loop now pauses whenever the
+       hero is off screen, so those pixels are only drawn while the hero is
+       actually being looked at.
+
        Browser zoom changes this ratio, which is why it is part of the test below. */
     const dpr=Math.min(window.devicePixelRatio||1,2);
 
@@ -2544,9 +2589,11 @@ function initCardKeyboardAccess(){
 
   let lastFrame=0;
   const frameInterval=isMobile?45:0; /* ~22fps on mobile, uncapped on desktop */
+  let rafId=null,running=false;
 
   function draw(timestamp){
-    if(isMobile&&timestamp-lastFrame<frameInterval){requestAnimationFrame(draw);return;}
+    if(!running){rafId=null;return;}
+    if(isMobile&&timestamp-lastFrame<frameInterval){rafId=requestAnimationFrame(draw);return;}
     lastFrame=timestamp;
     ctx.fillStyle='rgba(10,10,10,0.05)';
     ctx.fillRect(0,0,w,h);
@@ -2562,9 +2609,40 @@ function initCardKeyboardAccess(){
       if(y>h&&Math.random()>0.975)drops[i]=0;
       drops[i]++;
     }
-    requestAnimationFrame(draw);
+    rafId=requestAnimationFrame(draw);
   }
-  requestAnimationFrame(draw);
+
+  /* This drew 13,320 glyphs in 1.5 seconds while sitting 9,605px above the
+     viewport, into a canvas nobody could see, for the whole length of a scroll.
+     The rain is paused off screen instead - the drops keep their positions, so
+     it carries on exactly where it left off rather than restarting. */
+  function setRunning(on){
+    if(on===running)return;
+    running=on;
+    if(on&&rafId===null)rafId=requestAnimationFrame(draw);
+  }
+  /* Seeded from the rect rather than left false until the observer reports.
+     An IntersectionObserver only delivers entries while the document is being
+     rendered, so in a hidden or non-rendering tab that first entry may never
+     arrive - and a gate that starts paused waiting for it would never start. */
+  function onScreenNow(el,margin){
+    const r=el.getBoundingClientRect();
+    if(!r.width||!r.height)return false;
+    return r.bottom>-margin&&r.top<window.innerHeight+margin;
+  }
+  let onScreen=onScreenNow(canvas,100);
+  function sync(){setRunning(onScreen&&!document.hidden);}
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(entries=>{
+      /* The NEWEST record, not entries[0]. A coalesced batch can carry several
+         records for this target; the first is the stale one, and latching it
+         leaves the rain frozen while the canvas is on screen. */
+      onScreen=entries[entries.length-1].isIntersecting;
+      sync();
+    },{rootMargin:'100px'}).observe(canvas);
+  }
+  document.addEventListener('visibilitychange',sync);
+  sync();
 
   /* Resize never resets the columns -- init(false) keeps every drop where it is.
      The work is debounced so a drag doesn't thrash, then run on the next frame
@@ -3091,10 +3169,56 @@ function initMagneticButtons(){
 // ===============================
 function initPageProgress(){
   const bar=document.getElementById('pageProgress');
+  /* `document.documentElement.scrollHeight` forces the browser to flush layout.
+     Reading it on every scroll event and then writing `style.width` was a
+     layout read followed by a layout write, once per frame. The height only
+     changes when the page reflows, so measure it then; and scaleX on a
+     prepared layer is a compositor-only update that never touches layout. */
+  let max=1;
+  function measure(){
+    max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+  }
+  measure();
+  let queued=false;
+  function paint(){
+    queued=false;
+    const p=Math.min(1,Math.max(0,window.scrollY/max));
+    bar.style.transform='scaleX('+p+')';
+  }
   window.addEventListener('scroll',()=>{
-    const h=document.documentElement.scrollHeight-window.innerHeight;
-    bar.style.width=(window.scrollY/h*100)+'%';
+    if(!queued){queued=true;requestAnimationFrame(paint);}
   },{passive:true});
+  window.addEventListener('resize',()=>{measure();paint();},{passive:true});
+  /* The page grows when the API-built sections render, so follow that too. */
+  if('ResizeObserver' in window){
+    const ro=new ResizeObserver(()=>{measure();paint();});
+    ro.observe(document.body);
+  }
+  paint();
+}
+
+// ===============================
+// GOLD SHIMMER VIEWPORT GATE
+// ===============================
+function initShimmerGate(){
+  const els=[...document.querySelectorAll('.section-title,.hero-title,.about-text h2,.footer-connect')];
+  if(!els.length||!('IntersectionObserver' in window))return;
+  /* Only claim the gate once the observer is certainly going to run, so a
+     throw above this line can never leave every heading paused. */
+  document.documentElement.classList.add('shimmer-gated');
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>e.target.classList.toggle('shimmer-on',e.isIntersecting));
+  },{rootMargin:'150px'});
+  els.forEach(el=>{
+    /* Set the honest initial state before observing. Adding `shimmer-gated`
+       pauses every heading, so if the observer's first entries never arrive
+       they would all stay paused - including the one on screen. */
+    const r=el.getBoundingClientRect();
+    if(r.width&&r.height&&r.bottom>-150&&r.top<window.innerHeight+150){
+      el.classList.add('shimmer-on');
+    }
+    io.observe(el);
+  });
 }
 
 // ===============================
@@ -4741,29 +4865,65 @@ function triggerNeoSequence(){
   /* On mobile, use lower resolution and slower frame rate to save battery */
   const isMobile=window.matchMedia('(hover:none) and (pointer:coarse)').matches;
   const ctx=c.getContext('2d');
+  /* Cached CSS-pixel size. `offsetWidth`/`offsetHeight` force the browser to
+     flush layout before they can answer, and the draw loop below used to read
+     `offsetHeight` once PER DROP - measured at 603 reads per 480ms, about 1,250
+     forced layout flushes a second on a 1,428-element page, running whether or
+     not anyone was looking at the laptop. That was the hitch. The canvas has a
+     fixed CSS size, so one measurement in sz() is all it ever needed. */
+  let cw=0,ch=0;
   function sz(){
     /* Follow the real display ratio rather than a hard-coded 2, and use
        setTransform rather than scale() - scale() multiplies onto whatever is
        already there, so calling sz() twice would double the scale. */
     const dpr=isMobile?1:Math.min(window.devicePixelRatio||1,2);
-    c.width=Math.max(1,Math.round(c.offsetWidth*dpr));
-    c.height=Math.max(1,Math.round(c.offsetHeight*dpr));
+    cw=c.offsetWidth; ch=c.offsetHeight;
+    c.width=Math.max(1,Math.round(cw*dpr));
+    c.height=Math.max(1,Math.round(ch*dpr));
     ctx.setTransform(dpr,0,0,dpr,0,0);
   }
   sz();
   const chars='\u30A2\u30A4\u30A6\u30A8\u30AA\u30AB\u30AD\u30AF\u30B1\u30B30123456789ABCDEF<>/{}',fs=9;
-  const cols=Math.floor(c.offsetWidth/fs);
+  const cols=Math.floor(cw/fs);
   const drops=Array.from({length:cols},()=>Math.random()*-40);
   function drawMx(){
-    ctx.fillStyle='rgba(13,17,23,.12)';ctx.fillRect(0,0,c.offsetWidth,c.offsetHeight);
+    ctx.fillStyle='rgba(13,17,23,.12)';ctx.fillRect(0,0,cw,ch);
     ctx.fillStyle='#00ff41';ctx.font=fs+'px monospace';
     for(let i=0;i<drops.length;i++){
       if(drops[i]>0)ctx.fillText(chars[Math.random()*chars.length|0],i*fs,drops[i]*fs);
-      if(drops[i]*fs>c.offsetHeight&&Math.random()>.97)drops[i]=0;
+      if(drops[i]*fs>ch&&Math.random()>.97)drops[i]=0;
       drops[i]+=.5;
     }
   }
-  setInterval(drawMx,isMobile?90:55);
+
+  /* The interval used to be started once and never cleared, with no viewport or
+     visibility gate, so the laptop screen kept animating for the entire length
+     of the page. It now runs only while the screen is actually on screen. */
+  const STEP=isMobile?90:55;
+  /* Same reasoning as the hero rain: the initial state comes from the rect, so
+     the loop is never left paused waiting for an observer entry. */
+  function onScreenNow(el,margin){
+    const r=el.getBoundingClientRect();
+    if(!r.width||!r.height)return false;
+    return r.bottom>-margin&&r.top<window.innerHeight+margin;
+  }
+  let timer=null,onScreen=onScreenNow(c,120);
+  function sync(){
+    const want=onScreen&&!document.hidden;
+    if(want&&timer===null)timer=setInterval(drawMx,STEP);
+    else if(!want&&timer!==null){clearInterval(timer);timer=null;}
+  }
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(entries=>{
+      /* The NEWEST record, not entries[0]. A coalesced batch can carry several
+         records for this target; the first is the stale one, and latching it
+         leaves the rain frozen while the canvas is on screen. */
+      onScreen=entries[entries.length-1].isIntersecting;
+      sync();
+    },{rootMargin:'120px'}).observe(c);
+  }
+  document.addEventListener('visibilitychange',sync);
+  sync();
 })();
 
 /* ============ MACBOOK MOUSE FOLLOW + TILT + GLARE ============ */
